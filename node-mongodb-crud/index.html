@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node Mongo Crud</title>
+</head>
+<body>
+    <h1> Node Crud </h1>
+    <form action="/addUser" method="POST">
+        <input type="text" name="name" placeholder="name">
+        <input type="text" name="email" placeholder="email">
+        <input type="text" name="dept" placeholder="dept">
+        <button type="submit"> Add User </button>
+    </form>
+    <div id="user">
+
+    </div>
+    <div id="update">
+
+    </div>
+    <script>
+        fetch('http://localhost:4000/users')
+            .then(res => res.json())
+            .then(users => {
+                const u = document.getElementById('user')
+                users.forEach(user => {
+                    const p = document.createElement('p')
+                    p.innerHTML = `Name : ${user.name} Email: ${user.email} Dept : ${user.dept}
+                        <button onclick="loadUser('${user._id}')"> Update </button>
+                        <button onclick="deleteUser(event, '${user._id}')"> Delete </button>
+                    `
+                    u.appendChild(p)
+                })
+            })
+
+            function loadUser(id) {
+                fetch(`user/${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        const update = document.getElementById('update')
+                        update.innerHTML = `
+                            <h4> Update ${data._id} </h4>
+
+                            Name: <input type="text" value="${data.name}" id="name" >
+                            <br>
+                            Email: <input type="text" value="${data.email}" id="email">
+                            <br>
+                            Dept: <input type="text" value="${data.dept}" id="dept">
+                            <br>
+                            <button onclick="updateUser('${data._id}')"> Update </button>
+
+                        `
+                    })
+            }
+
+            function deleteUser(event, id) {
+                fetch(`/delete/${id}`, {
+                    method: 'DELETE'
+                })
+                .then(res => res.json())
+                .then(result => {
+                     if (result) {
+                        event.target.parentNode.style.display = 'none';
+                     }
+                })
+            }
+
+            function updateUser(id) {
+                const name = document.getElementById('name').value
+                const email = document.getElementById('email').value
+                const dept = document.getElementById('dept').value
+                const user = { name, email, dept }
+                console.log(user);
+
+                fetch(`/update/${id}`, {
+                    method: 'PATCH',
+                    headers: {
+                        'Content-Type' : 'application/json'
+                    },
+                    body: JSON.stringify(user)
+
+                })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                })
+            }
+    </script>
+</body>
+</html>

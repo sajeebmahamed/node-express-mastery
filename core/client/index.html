@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Core Node-Express</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container">
+        <h2> Load Data form Server </h2>
+        <form>
+            <input type="number" name="" id="num">
+            <input id="btn" type="submit">
+        </form>
+        <div>
+            <input type="text" name="" id="addUser">
+            <input id="userBtn" type="submit">
+        </div>
+        <div id="letter">
+            
+        </div>
+    </div>
+    <script>
+        // document.addEventListener('click', function(e) {
+        //     e.preventDefault()
+        //     const id = document.getElementById('num').value
+        //     fetch(`http://localhost:5000/letters/${id}`)
+        //     .then(res => res.json())
+        //     .then(data => {
+        //     document.getElementById('letter').innerText = data.letter
+        //     })
+        // })
+        const btn = document.getElementById('userBtn')
+        btn.addEventListener('click', () => {
+            const name = document.getElementById('addUser').value
+            const user = {name}
+
+            fetch('http://localhost:5000/add/letter', {
+                method: 'POST',
+                body: JSON.stringify(user),
+                headers: {
+                    "Content-type":"application/json; charset=UTF-8"
+                }
+            })
+                .then(res => res.json())
+                .then(data => getData(data))
+
+        })
+        const getData = (user) => {
+           document.getElementById('letter').innerText = user.name
+        }
+        
+    </script>
+</body>
+</html>
