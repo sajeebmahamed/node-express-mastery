@@ -1,10 +1,11 @@
-import React, { useContext, useState } from 'react';
 import 'date-fns';
+import React, { useContext, useState } from 'react';
 import DateFnsUtils from '@date-io/date-fns';
 import { Button, Grid } from '@material-ui/core';
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers';
 import { Link, useParams } from 'react-router-dom';
 import { UserContext } from '../../App';
+import Booking from '../Booking/Booking';
 
 const Book = () => {
     const {bedType} = useParams();
@@ -25,7 +26,18 @@ const Book = () => {
         setSelectedDate(newDate)
     }
     const handleBook = () => {
-        console.log('added');
+        const newBook = { ...loggedInUser, ...selectedDate }
+        console.log(newBook);
+
+        fetch('http://localhost:4000/addBooking', {
+            method: 'POST',
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(newBook)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+            })
     }
     return (
         <div style={{textAlign: 'center'}}>
@@ -60,6 +72,9 @@ const Book = () => {
                 </Grid>
                 <Button onClick={handleBook} variant="contained"> Book Now </Button>
             </MuiPickersUtilsProvider>
+            <div>
+                <Booking />
+            </div>
         </div>
     );
 };

@@ -10,6 +10,7 @@ import Login from './components/Login/Login';
 import Book from './components/Book/Book';
 import Header from './components/Header/Header';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
+import Booking from './components/Booking/Booking';
 
 export const UserContext = createContext();
 
@@ -22,6 +23,7 @@ function App() {
           <Header/>
           <Switch>
             <Route path="/home">
+              <Booking />
               <Home />
             </Route>
             <Route path="/login">
